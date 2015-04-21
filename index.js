@@ -20,9 +20,12 @@ var rect = new Kinetic.Rect({
 
 var imageObj = new Image();
 var image;
+imageObj.onload = function() {
+    image.setImage(this);
+    layer.draw();
+};
 imageObj.src = 'osm.png';
 
-imageObj.onload = function() {
     image = new Kinetic.Image({
         image: imageObj,
         width: 100,
@@ -65,7 +68,6 @@ var tween = new Kinetic.Tween({
 // tween.play();
 
 
-};
 
 // layer.add(rect);
 stage.add(layer);
