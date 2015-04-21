@@ -1,22 +1,3 @@
-// var stage = new Kinetic.Stage({
-//     container: 'container',
-//     width: 578,
-//     height: 360
-// });
-
-// var layer = new Kinetic.Layer();
-
-// var text = new Kinetic.Text({
-//     x: 10,
-//     y: 10,
-//     // fontFamily: 'Calibri',
-//     fontSize: 24,
-//     text: 'sdsdd',
-//     fill: 'black'
-// });
-
-// layer.add(text);
-// stage.add(layer);
 var stage = new Kinetic.Stage({
     container: 'container',
     width: 578,
@@ -46,6 +27,7 @@ imageObj.onload = function() {
         image: imageObj,
         // width: 100,
         // height: 100
+        scale: 1000
     });
     layer.add(image);
     image.on('click', function (e) {
@@ -57,36 +39,15 @@ imageObj.onload = function() {
 
 stage.add(layer);
 
-    var enemyLayer = new Kinetic.Layer();
-    stage.add(enemyLayer);
-    var playerLayer = new Kinetic.Layer();
-    stage.add(playerLayer);
-
-    var player = new Kinetic.Circle({
-        x:100,
-        y:100,
-        radius: 10,
-        fill: 'green',
-        draggable: true
+    /*
+    var player = new Kinetic.Rect({
     });
     player.on("dragmove",function(){
-        if(enemyLayer.getIntersection(player.position())){
-            this.fill("red");
-            playerLayer.draw();
-        }
+        player.position()
     });
     playerLayer.add(player);
     playerLayer.draw();
-
-    var enemy = new Kinetic.Circle({
-        x:200,
-        y:100,
-        radius: 20,
-        fill: 'blue',
-        draggable: true
-    });
-    enemyLayer.add(enemy);
-    enemyLayer.draw();
+    */
 
 
 // var anim = new Kinetic.Animation(function(frame) {
