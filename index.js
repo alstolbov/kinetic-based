@@ -26,36 +26,72 @@ var stage = new Kinetic.Stage({
 
 var layer = new Kinetic.Layer();
 
-var circle = new Kinetic.Circle({
-    x: 200,
-    y: 100,
-    radius: 70,
-    fill: 'red',
+var rect = new Kinetic.Rect({
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 50,
+    // fill: 'red',
     stroke: 'black',
-    strokeWidth: 4
-});
-
-layer.add(circle);
-
-stage.add(layer);
-
-var circle2 = new Kinetic.Circle({
-    x: 100,
-    y: 10,
-    radius: 70,
-    fill: 'red',
-    stroke: 'black',
-    strokeWidth: 4,
+    strokeWidth: 1,
     draggable: true
 });
 
-var layer2 = new Kinetic.Layer();
-layer2.add(circle2);
-stage.add(layer2);
+var imageObj = new Image();
+imageObj.src = 'osm.png';
+imageObj.onload = function() {
+    var image = new Kinetic.Image({
+        x: 20,
+        y: 50,
+        image: imageObj,
+        // width: 100,
+        // height: 100
+    });
+    layer.add(image);
+    image.on('click', function (e) {
+        console.log(image.getWidth());
+    });
+};
+
+// layer.add(rect);
+
+stage.add(layer);
+
+    var enemyLayer = new Kinetic.Layer();
+    stage.add(enemyLayer);
+    var playerLayer = new Kinetic.Layer();
+    stage.add(playerLayer);
+
+    var player = new Kinetic.Circle({
+        x:100,
+        y:100,
+        radius: 10,
+        fill: 'green',
+        draggable: true
+    });
+    player.on("dragmove",function(){
+        if(enemyLayer.getIntersection(player.position())){
+            this.fill("red");
+            playerLayer.draw();
+        }
+    });
+    playerLayer.add(player);
+    playerLayer.draw();
+
+    var enemy = new Kinetic.Circle({
+        x:200,
+        y:100,
+        radius: 20,
+        fill: 'blue',
+        draggable: true
+    });
+    enemyLayer.add(enemy);
+    enemyLayer.draw();
+
 
 // var anim = new Kinetic.Animation(function(frame) {
-//     circle2.setY(circle2.getY() + 1);
-//     layer2.draw();
+//     layer.setY(layer.getY() + 1);
+//     layer.draw();
 // });
 
 // anim.start();
