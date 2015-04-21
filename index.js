@@ -69,68 +69,18 @@ var tween = new Kinetic.Tween({
 stage.add(layer);
 
     /*
-    var player = new Kinetic.Rect({
-    });
-    player.on("dragmove",function(){
-        player.position()
-    });
-    playerLayer.add(player);
-    playerLayer.draw();
+    [obj].position();
+
+    events:
+    [obj].on([event_name],function(e){});
+        mouse:
+            mouseover,
+            mouseout,
+            mouseup
+        touch:
+            touchup
+        drag:
+            dragstart,
+            dragmove,
+            dragend  
     */
-
-
-// var anim = new Kinetic.Animation(function(frame) {
-//     layer.setY(layer.getY() + 1);
-//     layer.draw();
-// });
-
-// anim.start();
-
-// var stage = new Kinetic.Stage({
-//     container: 'container',
-//     width: 320,
-//     height: 240
-// });
-
-// var layer = new Kinetic.Layer({});
-
-// var circle = new Kinetic.Circle({
-//     x: 160,
-//     y: 120,
-//     radius: 100,
-//     fill: "#f0f",
-//     stroke: "black",
-//     strokeWidth: 2,
-//     draggable: true
-// });
-
-// var isDragging = false;
-
-// circle.on('mouseover', function(event) {
-//     circle.attrs.fill = "#ff0";
-//     layer.draw();
-// });
-
-// circle.on('mouseout', function(event) {
-//     circle.attrs.fill = "#f0f";
-//     layer.draw();
-// });
-
-// circle.on('dragstart', function(event) {
-//     isDragging = true;
-//     circle.attrs.opacity = 0.5;
-//     circle.attrs.radius = 9;
-//     layer.draw();
-// });
-
-// circle.on('dragend mouseup touchup', function(event) {
-//     isDragging = false;
-//     circle.attrs.opacity = 1;
-//     circle.attrs.radius = 100;
-//     layer.draw();
-// });
-
-
-// layer.add(circle);
-
-// stage.add(layer);
