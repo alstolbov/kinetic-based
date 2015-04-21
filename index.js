@@ -24,13 +24,15 @@ imageObj.src = 'osm.png';
 
 imageObj.onload = function() {
     image = new Kinetic.Image({
-        x: 20,
-        y: 50,
         image: imageObj,
         width: 100,
         height: 100,
         fill: 'red',
         // scale: {x: 0.2, y:0.2}
+    });
+    image.setAttrs({
+        x: 20,
+        y: 50
     });
     image.crop({
         x: 0,
@@ -69,18 +71,33 @@ var tween = new Kinetic.Tween({
 stage.add(layer);
 
     /*
+
     [obj].position();
+    [obj].setAttrs({});
+
 
     events:
     [obj].on([event_name],function(e){});
-        mouse:
-            mouseover,
-            mouseout,
-            mouseup
-        touch:
-            touchup
-        drag:
-            dragstart,
-            dragmove,
-            dragend  
+        
+        mousedown
+        mouseup
+        mouseover
+        mouseout
+        mouseenter
+        mouseleave
+        mousemove
+        mousewheel
+        click
+        dblclick
+        touchstart
+        touchend
+        touchmove
+        tap
+        dbltap
+        dragstart
+        dragmove
+        dragend
+        draw
+        beforeDraw
+  
     */
