@@ -37,7 +37,5 @@ Game.loadImages(images, function () {
     for (var i = 0; i < 5; i ++) {
         addBox();
     }
-    boxLayer.draw();
-    console.log(Game);
 });
 
