@@ -134,6 +134,8 @@ Game.createObject = function (className, objectData) {
 
     this.objectCollection[className][obj._id] = obj;
 
+    this.objectCollection[className]._length++;
+
     this.objectIdsInCollections[obj._id] = className;
 
     return obj;
@@ -146,6 +148,8 @@ Game.deleteObject = function (obj) {
             delete this.objectCollection[className][obj._id];
         }
         delete this.objectIdsInCollections[obj._id];
+
+        this.objectCollection[className]._length--;
 
         obj.remove();
     }
