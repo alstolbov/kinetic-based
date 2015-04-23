@@ -50,12 +50,15 @@ Game.createClass('sprite', {
         animation: 'standing',
         animations: animationsArray,
         frameRate: 4,
-        frameIndex: 2
+        frameIndex: 0
     },
     events: {
         click: function (e) {
             console.log(this.getWidth());
         }
+        // frameIndexChange: function (e) {
+        //     console.log('asd');
+        // }
     }
 });
 
@@ -100,6 +103,14 @@ var onLoadEnd = function () {
             }
         }
     );
+
+    // var velocity = 50;
+    // var anim = new Kinetic.Animation(function (frame) {
+    //     var dist = velocity * (frame.timeDiff / 1000);
+    //     console.log(dist);
+    // });
+
+    // anim.start();
 }
 
 

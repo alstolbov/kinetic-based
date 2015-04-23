@@ -101,5 +101,6 @@ stage.add(layer);
         dragend
         draw
         beforeDraw
+        frameIndexChange
   
     */
