@@ -1,27 +1,16 @@
-var imageURLs=[];  // put the paths to your images here
-var imagesOK=0;
-var imgs=[];
-imageURLs.push("");
-loadAllImages(start);
+// trace THIS
 
-function loadAllImages(callback){
-    for (var i=0; i<imageURLs.length; i++) {
-        var img = new Image();
-        imgs.push(img);
-        img.onload = function(){ 
-            imagesOK++; 
-            if (imagesOK>=imageURLs.length ) {
-                callback();
+var object = {
+　　name : 'foo',
+　　getName : function(){ //closure
+        return {
+            a : 111,
+            b : this.name, // variable th is avaliable in the inner scope
+            c : function(){
+                return this.b;
             }
         };
-        img.onerror=function(){alert("image load failed");} 
-        img.crossOrigin="anonymous";
-        img.src = imageURLs[i];
-    }      
-}
+ 　}
+};
 
-function start(){
-    // the imgs[] array holds fully loaded images
-    // the imgs[] are in the same order as imageURLs[]
-    // use the images now!
-}
+console.log(object.getName().b);

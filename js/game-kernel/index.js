@@ -2,11 +2,13 @@
 TODO:
 - процесс загрузки изображений: возвращать процент загрузки
 - столкновения
+- удаление обьекта
 */
 
 var Game = {
     classCollection: {},
     objectCollection: {},
+    objectIdsInCollections: {},
     Stage: {},
     layers: {},
     images: {}
@@ -85,13 +87,7 @@ Game.createObject = function (className, objectData) {
     var layer;
     var img;
 
-    if (!this.objectCollection[className]) {
-        this.objectCollection[className] = [];
-    }
-
     var obj = this.classCollection[className]();
-
-    this.objectCollection[className].push(obj);
 
     if (objectData) {
         if (objectData.layer) {
@@ -128,7 +124,29 @@ Game.createObject = function (className, objectData) {
         return obj;
     }
 
+    if (!this.objectCollection[className]) {
+        this.objectCollection[className] = {
+            _length: 0
+        };
+    }
+
+    this.objectCollection[className][obj._id] = obj;
+
+    this.objectIdsInCollections[obj._id] = className;
+
     return obj;
+};
+
+Game.deleteObject = function (obj) {
+    if (this.objectIdsInCollections[obj._id]) {
+        var className = this.objectIdsInCollections[obj._id];
+        if (this.objectCollection[className] && this.objectCollection[className][obj._id]) {
+            delete this.objectCollection[className][obj._id];
+        }
+        delete this.objectIdsInCollections[obj._id];
+
+        obj.remove();
+    }
 };
 
 Game.init = function (initData) {
