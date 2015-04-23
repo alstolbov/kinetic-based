@@ -1,8 +1,7 @@
 /*
 TODO:
 - процесс загрузки изображений: возвращать процент загрузки
-- анимация в класс
-- спрайты: загрузка спрайтов, подвешивание на класс
+- столкновения
 */
 
 var Game = {
@@ -16,7 +15,9 @@ var Game = {
 Game.createClass = function (className, classData) {
 
     this.classCollection[className] = function () {
-        var backgroundImg;
+        var classType;
+        var newClass;
+        var classImg;
         var init = classData.init;
         var initData = {};
 
@@ -26,21 +27,41 @@ Game.createClass = function (className, classData) {
             }
         }
         if (init._background) {
-            backgroundImg = init._background;
+            classImg = init._background;
+            classType = 'image';
+        } else if (init._sprite) {
+            classImg = init._sprite;
+            classType = 'sprite';
+        } else {
+            classType = 'simple';
         }
 
-        var newClass = new Kinetic.Image(initData);
-        if (initData.width && initData.height) {
-            newClass.crop({
-                x: 0,
-                y: 0,
-                width: initData.width,
-                height: initData.height
-            });
+        switch (classType) {
+
+            case 'image':
+                newClass = new Kinetic.Image(initData);
+                if (initData.width && initData.height) {
+                    newClass.crop({
+                        x: 0,
+                        y: 0,
+                        width: initData.width,
+                        height: initData.height
+                    });
+                }
+                break;
+
+            case 'sprite':
+                newClass = new Kinetic.Sprite(initData);
+                break;
+
+            case 'simple':
+                newClass = new Kinetic.Rect(initData);
+                break;
         }
 
-        if (backgroundImg) {
-            newClass.willSetImage = backgroundImg;
+
+        if (classImg) {
+            newClass.willSetImage = classImg;
         }
 
         if (classData.events) {
@@ -93,6 +114,9 @@ Game.createObject = function (className, objectData) {
                 layer.draw();
             }
         }
+        if (objectData.attrs) {
+            obj.setAttrs(objectData.attrs);
+        }
     }
 
     obj.set = function (attrs) {
@@ -100,6 +124,8 @@ Game.createObject = function (className, objectData) {
         if (layer) {
             layer.draw();
         }
+
+        return obj;
     }
 
     return obj;

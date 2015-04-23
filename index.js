@@ -1,3 +1,30 @@
+var animationsArray = {
+    standing: [
+        0, 0, 35, 20,
+        35, 0, 35, 20,
+        70, 0, 35, 20
+    ]
+};
+
+Game.createClass('simpleBlock', {
+    init: {
+        width: 100,
+        height: 50,
+        fill: 'red',
+        draggable: true
+    },
+    events: {
+        click: function (e) {
+            console.log('ID: ', this._id, e);
+            this.set({
+                x: 0,
+                y: 0
+            });
+        }
+    }
+});
+
+
 Game.createClass('box', {
     init: {
         width: 100,
@@ -13,20 +40,33 @@ Game.createClass('box', {
     }
 });
 
-Game.init({
-    width: 578,
-    height: 200,
-    draggable: true
+Game.createClass('sprite', {
+    init: {
+        width: 100,
+        height: 100,
+        fill: 'red',
+        _sprite: 'box',
+        draggable: true,
+        animation: 'standing',
+        animations: animationsArray,
+        frameRate: 4,
+        frameIndex: 2
+    },
+    events: {
+        click: function (e) {
+            console.log(this.getWidth());
+        }
+    }
 });
 
 var images = [{
     box: 'osm.png'
 }];
 
-Game.loadImages(images, function () {
+var onLoadEnd = function () {
     var boxLayer = Game.layer('boxLayer');
 
-    var addBox = function () {
+    var addBox = function (i) {
         var box = Game.createObject('box', {layer: 'boxLayer'});
         box.set({
             x: 120*i,
@@ -34,8 +74,43 @@ Game.loadImages(images, function () {
         });
     };
 
-    for (var i = 0; i < 5; i ++) {
-        addBox();
+    for (var i = 0; i < 3; i ++) {
+        addBox(i);
     }
+
+    var sprite = Game.createObject(
+        'sprite',
+        {
+            layer: 'boxLayer',
+            attrs: {
+                x: 400,
+                y: 75
+            }
+        }
+    );
+    sprite.start();
+
+    var block = Game.createObject(
+        'simpleBlock',
+        {
+            layer: 'boxLayer',
+            attrs: {
+                x: 20,
+                y: 150
+            }
+        }
+    );
+}
+
+
+Game.init({
+    width: 578,
+    height: 200,
+    draggable: true
 });
+
+Game.loadImages(
+    images,
+    onLoadEnd
+);
 
