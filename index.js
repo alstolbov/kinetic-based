@@ -1,13 +1,17 @@
-Game.createClass(
-    'box', 
-    {
+Game.createClass('box', {
+    init: {
         width: 100,
         height: 100,
         fill: 'red',
         _sprite: 'box',
         draggable: true
+    },
+    events: {
+        click: function (e) {
+            console.log('ID: ', this._id, e);
+        }
     }
-);
+});
 
 Game.init({
     width: 578,
@@ -27,10 +31,6 @@ Game.loadImages(images, function () {
         box.set({
             x: 120*i,
             y: 50
-        });
-        // box.setImage(Game.getImage('box'));
-        box.on('click', function () {
-            console.log(box._id);
         });
     };
 

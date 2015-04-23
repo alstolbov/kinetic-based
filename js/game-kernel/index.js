@@ -10,29 +10,41 @@ Game.createClass = function (className, classData) {
 
     this.classCollection[className] = function () {
         var sprite;
-        var data = {};
+        var init = classData.init;
+        var initData = {};
 
-        for (var key in classData) {
-            if (key !== '_sprite') {
-                data[key] = classData[key];
+        for (var key in init) {
+            if (key.substring(0, 1) !== '_') {
+                initData[key] = init[key];
             }
         }
-        if (classData._sprite) {
-            sprite = classData._sprite;
+        if (init._sprite) {
+            sprite = init._sprite;
         }
 
-        var newClass = new Kinetic.Image(data);
-        if (data.width && data.height) {
+        var newClass = new Kinetic.Image(initData);
+        if (initData.width && initData.height) {
             newClass.crop({
                 x: 0,
                 y: 0,
-                width: data.width,
-                height: data.height
+                width: initData.width,
+                height: initData.height
             });
         }
 
         if (sprite) {
             newClass.willSetImage = sprite;
+        }
+
+        if (classData.events) {
+            for (var classEventKey in classData.events) {
+                newClass.on(
+                    classEventKey,
+                    function (e) {
+                        classData.events[classEventKey].call(newClass, e);
+                    }
+                );
+            }
         }
 
         return newClass;
