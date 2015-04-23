@@ -1,3 +1,10 @@
+/*
+TODO:
+- процесс загрузки изображений: возвращать процент загрузки
+- анимация в класс
+- спрайты: загрузка спрайтов, подвешивание на класс
+*/
+
 var Game = {
     classCollection: {},
     objectCollection: {},
@@ -9,7 +16,7 @@ var Game = {
 Game.createClass = function (className, classData) {
 
     this.classCollection[className] = function () {
-        var sprite;
+        var backgroundImg;
         var init = classData.init;
         var initData = {};
 
@@ -18,8 +25,8 @@ Game.createClass = function (className, classData) {
                 initData[key] = init[key];
             }
         }
-        if (init._sprite) {
-            sprite = init._sprite;
+        if (init._background) {
+            backgroundImg = init._background;
         }
 
         var newClass = new Kinetic.Image(initData);
@@ -32,8 +39,8 @@ Game.createClass = function (className, classData) {
             });
         }
 
-        if (sprite) {
-            newClass.willSetImage = sprite;
+        if (backgroundImg) {
+            newClass.willSetImage = backgroundImg;
         }
 
         if (classData.events) {
@@ -117,21 +124,22 @@ Game.loadImages = function (imagesArray, done) {
     var loading = 0;
     var imgSrc;
 
-    for (var i=0; i<imagesArray.length; i++) {
+    for (var i=0; i < imagesArray.length; i++) {
         var imgObj = new Image();
         for (var key in imagesArray[i]) {
             imgSrc = imagesArray[i][key];
-            console.log(key, imgSrc);
             _this.images[key] = imgObj;
         }
 
-        imgObj.onload = function(){ 
+        imgObj.onload = function () { 
             loading++; 
             if (loading >= imagesArray.length) {
                 done();
             }
         };
-        imgObj.onerror=function(){alert("image load failed");} 
+        imgObj.onerror=function () {
+            console.log(imgSrc + "image load failed");
+        } 
         // imgObj.crossOrigin="anonymous";
         imgObj.src = imgSrc;
     }  

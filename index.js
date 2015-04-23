@@ -3,7 +3,7 @@ Game.createClass('box', {
         width: 100,
         height: 100,
         fill: 'red',
-        _sprite: 'box',
+        _background: 'box',
         draggable: true
     },
     events: {
