@@ -1,3 +1,9 @@
+/*
+
+http://stackoverflow.com/questions/28716693/how-to-move-an-entity-to-the-mouse-position-rotating-towards-it
+http://dev.bennage.com/blog/2013/03/05/game-dev-03/
+
+*/
 // trace THIS
 
 var object = {
@@ -14,6 +20,51 @@ var object = {
 };
 
 console.log(object.getName().b);
+
+
+var stage = new Kinetic.Stage({
+    container: 'container',
+    width: 350,
+    height: 350
+});
+var layer = new Kinetic.Layer();
+stage.add(layer);
+
+
+
+var circle1 = new Kinetic.Circle({
+    x: 50,
+    y: 100,
+    radius: 30,
+    fill: 'red',
+    stroke: 'black',
+    strokeWidth: 4,
+    draggable: true
+});
+layer.add(circle1);
+layer.draw();
+
+var lastTime;
+var frameDelay = 1000;
+
+var loop = new Kinetic.Animation(function (frame) {
+
+    var time = frame.time
+
+    if (!lastTime) {
+        lastTime = time;
+    }
+
+    var elapsed = time - lastTime;
+
+    if (elapsed >= frameDelay) {
+        // frameDelay has expired, so animate stuff now
+        circle1.x(circle1.x() + 10);
+        lastTime = time;
+    }
+}, layer);
+
+loop.start();
 
 
 // t: current time, 
