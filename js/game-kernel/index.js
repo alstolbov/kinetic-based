@@ -79,6 +79,10 @@ Game.createClass = function (className, classData) {
             }
         }
 
+        if (classData.pub) {
+            newClass._pub = classData.pub;
+        }
+
         return newClass;
     }
     
@@ -124,7 +128,36 @@ Game.createObject = function (className, objectData) {
         }
 
         return obj;
-    }
+    };
+
+    obj.getPub = function (pubMethodName, args) {
+        var tmp = obj._pub();
+        var res;
+
+        if(!tmp[pubMethodName]) {
+            res = false;
+        } else {
+            switch (typeof tmp[pubMethodName]) {
+
+                case "function":
+                    res = tmp[pubMethodName].call(obj, args);
+                    break;
+                default:
+                    res = tmp[pubMethodName];
+
+            }
+        }
+
+        return res;
+    };
+
+    obj.setPub = function (pubMethodName, args) {
+        var tmp = obj._pub();
+        
+        if(!tmp[pubMethodName]) {
+            tmp[pubMethodName] = args;
+        }       
+    };
 
     if (!this.objectCollection[className]) {
         this.objectCollection[className] = {
