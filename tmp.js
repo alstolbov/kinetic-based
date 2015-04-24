@@ -2,7 +2,8 @@
 
 http://stackoverflow.com/questions/28716693/how-to-move-an-entity-to-the-mouse-position-rotating-towards-it
 http://dev.bennage.com/blog/2013/03/05/game-dev-03/
-
+http://stackoverflow.com/questions/19041434/html5-canvas-move-directly-to-point
+https://gist.github.com/rlemon/1367346
 */
 // trace THIS
 
