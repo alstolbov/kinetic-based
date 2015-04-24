@@ -141,7 +141,7 @@ Game.createObject = function (className, objectData) {
     return obj;
 };
 
-Game.deleteObject = function (obj) {
+Game.destroyObject = function (obj) {
     if (this.objectIdsInCollections[obj._id]) {
         var className = this.objectIdsInCollections[obj._id];
         if (this.objectCollection[className] && this.objectCollection[className][obj._id]) {
@@ -151,7 +151,10 @@ Game.deleteObject = function (obj) {
 
         this.objectCollection[className]._length--;
 
-        obj.remove();
+        obj.destroy();
+        obj = NaN;
+
+        return obj;
     }
 };
 
