@@ -10,9 +10,9 @@ TODO:
 var Game = {
     classCollection: {},
     objectCollection: {},
-    objectIdsInCollections: {},
     Stage: {},
     layers: {},
+    layerAnimation: {},
     images: {}
 };
 
@@ -83,6 +83,10 @@ Game.createClass = function (className, classData) {
             newClass._pub = classData.pub;
         }
 
+        if (classData.onCreate) {
+            newClass._onCreate = classData.onCreate;
+        }
+
         return newClass;
     }
     
@@ -102,6 +106,7 @@ Game.createObject = function (className, objectData) {
                 layer = objectData.layer;
             } else if (typeof objectData.layer == 'string') {
                 layer = this.layers[objectData.layer];
+                obj._layerName = objectData.layer;
             }
 
             if (obj.willSetImage) {
@@ -115,6 +120,7 @@ Game.createObject = function (className, objectData) {
                 layer.add(obj);
                 layer.draw();
             }
+
         }
         if (objectData.attrs) {
             obj.setAttrs(objectData.attrs);
@@ -154,7 +160,7 @@ Game.createObject = function (className, objectData) {
     obj.setPub = function (pubMethodName, args) {
         var tmp = obj._pub();
         
-        if(!tmp[pubMethodName]) {
+        if(tmp.hasOwnProperty(pubMethodName)) {
             tmp[pubMethodName] = args;
         }       
     };
@@ -165,29 +171,33 @@ Game.createObject = function (className, objectData) {
         };
     }
 
+    obj._className = className;
+
     this.objectCollection[className][obj._id] = obj;
 
     this.objectCollection[className]._length++;
 
-    this.objectIdsInCollections[obj._id] = className;
+    if (obj._onCreate) {
+        for (var i = 0; i <= obj._onCreate.length; i++) {
+            obj.getPub(obj._onCreate[i]);
+        }
+    }
 
     return obj;
 };
 
 Game.destroyObject = function (obj) {
-    if (this.objectIdsInCollections[obj._id]) {
-        var className = this.objectIdsInCollections[obj._id];
-        if (this.objectCollection[className] && this.objectCollection[className][obj._id]) {
-            delete this.objectCollection[className][obj._id];
-        }
-        delete this.objectIdsInCollections[obj._id];
+    if (this.objectCollection[obj._className] && this.objectCollection[obj._className][obj._id]) {
 
-        this.objectCollection[className]._length--;
+        delete this.objectCollection[obj._className][obj._id];
+
+        this.objectCollection[obj._className]._length--;
 
         obj.destroy();
-        obj = NaN;
 
-        return obj;
+        this.layers[obj._layerName].draw();
+
+        return NaN;
     }
 };
 
@@ -242,7 +252,40 @@ Game.layer = function (layerName) {
 
     this.layers[layerName] = new Kinetic.Layer();
     this.Stage.add(this.layers[layerName]);
-
+    this.createAimationOnLayer(layerName);
     return this.layers[layerName];
 
 };
+
+Game.createAimationOnLayer = function (layerName) {
+    var _this = this;
+    if (_this.layers[layerName]) {
+        _this.layerAnimation[layerName] = {};
+        _this.layerAnimation[layerName].animateCollection = {};
+        _this.layerAnimation[layerName].animateController = new Kinetic.Animation(function(frame) {
+            for(var animItem in _this.layerAnimation[layerName].animateCollection) {
+                if (typeof _this.layerAnimation[layerName].animateCollection[animItem] == "function") {
+                    _this.layerAnimation[layerName].animateCollection[animItem](frame);
+                }
+            }
+        }, _this.layers[layerName]);
+
+        _this.layerAnimation[layerName].animateController.start();
+    }
+};
+
+Game.addLayerAnimation = function (data, animateFunct) {
+    if (this.layerAnimation[data.layerName] &&
+    typeof animateFunct == "function") {
+        this.layerAnimation[data.layerName].animateCollection[data.objId] = animateFunct;
+    }
+};
+
+Game.layerAnimation = function (layerName) {
+    if (this.layerAnimation[layerName]) {
+        return this.layerAnimation[layerName].animateController;
+    } else {
+        return false;
+    }
+};
+
