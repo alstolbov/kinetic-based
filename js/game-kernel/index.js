@@ -44,7 +44,7 @@ Game.createClass = function (className, classData) {
             case 'image':
                 newClass.obj = new Kinetic.Image(initData);
                 if (initData.width && initData.height) {
-                    newClass.crop({
+                    newClass.obj.crop({
                         x: 0,
                         y: 0,
                         width: initData.width,
@@ -138,7 +138,7 @@ Game.createObject = function (className, objectData) {
 
     if (!this.objectCollection[className]) {
         this.objectCollection[className] = {
-            _length: 0
+            // _length: 0
         };
     }
 
@@ -146,7 +146,7 @@ Game.createObject = function (className, objectData) {
 
     this.objectCollection[className][obj.obj._id] = obj;
 
-    this.objectCollection[className]._length++;
+    // this.objectCollection[className]._length++;
 
     if (obj._onCreate) {
         for (var i = 0; i < obj._onCreate.length; i++) {
@@ -162,7 +162,7 @@ Game.destroyObject = function (obj) {
 
         delete this.objectCollection[obj._className][obj.obj._id];
 
-        this.objectCollection[obj._className]._length--;
+        // this.objectCollection[obj._className]._length--;
 
         obj.obj.destroy();
 
@@ -185,7 +185,7 @@ Game.init = function (initData) {
     return this.Stage;
 };
 
-Game.loadImages = function (imagesArray, done) {
+Game.loadImages = function (imagesArray, onProcess, done) {
 
     var _this = this;
     var loading = 0;
@@ -199,7 +199,10 @@ Game.loadImages = function (imagesArray, done) {
         }
 
         imgObj.onload = function () { 
-            loading++; 
+            loading++;
+            if (onProcess) {
+                onProcess(imagesArray.length, loading);
+            } 
             if (loading >= imagesArray.length) {
                 done();
             }
@@ -286,9 +289,6 @@ Game.isCollide = function (obj, className) {
 };
 
 Game._collider = function (a, b) {
-    var n = a;
-    var m = b;
-    var nn = n.getY();
     return !(
         ((a.getY() + a.getHeight()) < (b.getY())) ||
         (a.getY() > (b.getY() + b.getHeight())) ||
