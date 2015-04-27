@@ -219,11 +219,13 @@ Game.getImage = function (imgName) {
         false;
 };
 
-Game.layer = function (layerName) {
+Game.layer = function (layerName, options) {
 
     this.layers[layerName] = new Kinetic.Layer();
     this.Stage.add(this.layers[layerName]);
-    this.createAimationOnLayer(layerName);
+    if (options.animated) {
+        this.createAimationOnLayer(layerName);
+    }
     return this.layers[layerName];
 
 };
@@ -246,6 +248,9 @@ Game.createAimationOnLayer = function (layerName) {
 };
 
 Game.addLayerAnimation = function (data, animateFunct) {
+    if (!this.layerAnimation[data.layerName]) {
+        this.createAimationOnLayer(data.layerName);
+    }
     if (this.layerAnimation[data.layerName] &&
     typeof animateFunct == "function") {
         this.layerAnimation[data.layerName].animateCollection[data.objId] = animateFunct;
@@ -265,15 +270,12 @@ Game.isCollide = function (obj, className) {
         isHit: false,
         objects: []
     };
-    var objPos = obj.obj.position();
-    var itemPos;
     var item;
     var itemId;
     for(itemId in this.objectCollection[className]) {
         if (itemId !== '_length') {
             item = this.objectCollection[className][itemId];
-            itemPos = item.obj.position();
-            if ((objPos.x - item.obj.getWidth()) == itemPos.x) {
+            if (this._collider(obj.obj, item.obj)) {
                 res.isHit = true;
                 res.objects.push(this.objectCollection[className][itemId]);
             }
@@ -282,3 +284,15 @@ Game.isCollide = function (obj, className) {
 
     return res;
 };
+
+Game._collider = function (a, b) {
+    var n = a;
+    var m = b;
+    var nn = n.getY();
+    return !(
+        ((a.getY() + a.getHeight()) < (b.getY())) ||
+        (a.getY() > (b.getY() + b.getHeight())) ||
+        ((a.getX() + a.getWidth()) < b.getX()) ||
+        (a.getX() > (b.getX() + b.getWidth()))
+    );
+}

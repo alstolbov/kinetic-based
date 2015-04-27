@@ -24,8 +24,9 @@ Game.createClass('clickArea', {
     events: {
         mousedown: function () {
             var mousePos = Game.Stage.getPointerPosition();
-            player._state.isMoved = true;
-            player.set(mousePos);
+            // player._state.isMoved = true;
+            player._state.resCoords = mousePos;
+            // player.set(mousePos);
         }
     }
 });
@@ -46,46 +47,81 @@ Game.createClass('player', {
     },
     addAnim: function () {
         var _this = this;
+        _this._state.resCoords = {
+            x: _this.obj.getX(),
+            y: _this.obj.getY()
+        };
         Game.addLayerAnimation(
             {
                 layerName: this._layerName,
                 objId: this.obj._id
             },
             function (frame) {
-                if (_this._state.isMoved) {
-                    _this.set({x: _this.obj.getAttr('x') - 1});
-                }
-                if (_this.obj.getAttr('x') <= 10) {
-                    _this._state.isMoved = false;
+                if (_this._state.resCoords.x !== _this.obj.getX() &&
+                _this._state.resCoords.y !== _this.obj.getY()) {
+                    _this.set(_this.linePoints());
                 }
                 var collide = Game.isCollide(_this, 'block');
                 if (collide.isHit) {
-                    _this._state.isMoved = false;
+                    // _this._state.isMoved = false;
+                    _this._state.resCoords = _this.obj.position();
                 }
             }
         );
 
     },
+    linePoints: function () {
+        var x1 = this.obj.getX();
+        var y1 = this.obj.getY();
+        var x2 = this._state.resCoords.x;
+        var y2 = this._state.resCoords.y;
+        var dx = Math.floor(x2 - x1);
+        var dy = Math.floor(y2 - y1);
+        var length = Math.floor(Math.sqrt(dx * dx + dy * dy));
+        var coeff = Math.floor(length / this._state.speed);
+        var incrementX;
+        if (Math.abs(dx) > coeff) {
+            incrementX = Math.floor(dx / coeff);
+        } else {
+            incrementX = dx;
+        }
+        var incrementY;
+        if (Math.abs(dy) > coeff ) {
+            incrementY = Math.floor(dy / coeff);
+        } else {
+            incrementY = dy;
+        }
+
+        var newX = Math.floor(x1 + incrementX);
+        var newY = Math.floor(y1 + incrementY);
+
+        return {
+            x: newX,
+            y: newY
+        }
+    },
     _onCreate: [
         'addAnim'
     ],
     _state: {
-        isMoved: false
+        isMoved: false,
+        speed: 10,
+        resCoords: {}
     }
 });
 
 Game.createClass('block', {
     init: {
-        x: 50,
-        y: 20,
-        width: 10,
-        height: Game.Stage.getHeight() - 40,
+        x: 150,
+        y: 60,
+        width: 140,
+        height: 10,
         fill: 'red'
     }
 })
 
 var onLoadEnd = function () {
-    var mainLayer = Game.layer('mainLayer');
+    var mainLayer = Game.layer('mainLayer', {animated: false});
     var clickArea = Game.createObject('clickArea',{layer: 'mainLayer'});
     var block = Game.createObject('block', {layer: 'mainLayer'});
     player = Game.createObject('player',{layer: 'mainLayer'});
