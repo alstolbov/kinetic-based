@@ -2,7 +2,6 @@
 TODO:
 - процесс загрузки изображений: возвращать процент загрузки
 - столкновения
-- удаление обьекта
 - управление с клавиатуры
 - гравитация?
 */
@@ -63,28 +62,26 @@ Game.createClass = function (className, classData) {
                 break;
         }
 
-
         if (classImg) {
             newClass.willSetImage = classImg;
         }
 
-        if (classData.events) {
-            for (var classEventKey in classData.events) {
-                newClass.on(
-                    classEventKey,
-                    function (e) {
-                        classData.events[classEventKey].call(newClass, e);
+        for (var option in classData) {
+            switch (option) {
+                case "events":
+                    for (var classEventKey in classData.events) {
+                        newClass.on(
+                            classEventKey,
+                            function (e) {
+                                classData.events[classEventKey].call(newClass, e);
+                            }
+                        );
                     }
-                );
+                    break;
+
+                default:
+                     newClass[option] = classData[option];
             }
-        }
-
-        if (classData.pub) {
-            newClass._pub = classData.pub;
-        }
-
-        if (classData.onCreate) {
-            newClass._onCreate = classData.onCreate;
         }
 
         return newClass;
@@ -289,3 +286,25 @@ Game.layerAnimation = function (layerName) {
     }
 };
 
+Game.isCollide = function (obj, className) {
+    var res = {
+        isHit: false,
+        objects: []
+    };
+    var objPos = obj.position();
+    var itemPos;
+    var item;
+    var itemId;
+    for(itemId in this.objectCollection[className]) {
+        if (itemId !== '_length') {
+            item = this.objectCollection[className][itemId];
+            itemPos = item.position();
+            if ((objPos.x - item.getWidth()) == itemPos.x) {
+                res.isHit = true;
+                res.objects.push(this.objectCollection[className][itemId]);
+            }
+        }
+    }
+
+    return res;
+};

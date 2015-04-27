@@ -21,36 +21,13 @@ Game.createClass('clickArea', {
         x: 0,
         y: 0      
     },
-    // events: {
-    //     mousedown: function () {
-    //         var mousePos = Game.Stage.getPointerPosition();
-    //         console.log(mousePos);
-    //         player.setPub('isMoved', true);
-    //         console.log(player._pub());
-    //     }
-    // },
-    pub: function () {
-        return {
-            addAnim: function () {
-                Game.addLayerAnimation(
-                    {
-                        layerName: this._layerName,
-                        objId: this._id
-                    },
-                    function (frame) {
-                        // console.log(player.getPub('isMoved'));
-                        // if (player.getPub('isMoved')) {
-                        //     player.set({x: player.getAttr('x') + 1})
-                        // }
-                    }
-                );
-
-            }
+    events: {
+        mousedown: function () {
+            var mousePos = Game.Stage.getPointerPosition();
+            player._state.isMoved = true;
+            player.set(mousePos);
         }
-    },
-    onCreate: [
-        'addAnim'
-    ]
+    }
 });
 
 Game.createClass('player', {
@@ -59,8 +36,7 @@ Game.createClass('player', {
         height: 10,
         x: 10,
         y: 10,
-        fill: '#ddd',
-        _ddd: 'ddd'
+        fill: '#ddd'
     },
     events: {
         click: function (e) {
@@ -68,27 +44,61 @@ Game.createClass('player', {
             Game.layerAnimation(this._layerName).stop();
         }
     },
-    pub: function () {
+    _pub: function () {
         return {
-            isMoved: 'ssdsd',
-            setMoved: function () {
-                this.isMoved = '>';
+            addAnim: function () {
+                var _this = this;
+                Game.addLayerAnimation(
+                    {
+                        layerName: this._layerName,
+                        objId: this._id
+                    },
+                    function (frame) {
+                        if (_this._state.isMoved) {
+                            _this.set({x: _this.getAttr('x') - 1});
+                        }
+                        if (_this.getAttr('x') <= 10) {
+                            _this._state.isMoved = false;
+                        }
+                        var collide = Game.isCollide(_this, 'block');
+                        if (collide.isHit) {
+                            _this._state.isMoved = false;
+                        }
+                    }
+                );
+
             }
         }
+    },
+    _onCreate: [
+        'addAnim'
+    ],
+    _state: {
+        isMoved: false
     }
 });
+
+Game.createClass('block', {
+    init: {
+        x: 50,
+        y: 20,
+        width: 10,
+        height: Game.Stage.getHeight() - 40,
+        fill: 'red'
+    }
+})
 
 var onLoadEnd = function () {
     var mainLayer = Game.layer('mainLayer');
     var clickArea = Game.createObject('clickArea',{layer: 'mainLayer'});
+    var block = Game.createObject('block', {layer: 'mainLayer'});
     player = Game.createObject('player',{layer: 'mainLayer'});
-
-    clickArea.on('mousedown', function () {
-            var mousePos = Game.Stage.getPointerPosition();
-            console.log(player._pub().setMoved());
-            console.log(player._pub());
-        }
-    )
+    // clickArea.on('mousedown', function () {
+    //         var mousePos = Game.Stage.getPointerPosition();
+    //         console.log(player._pub().setMoved());
+    //         console.log(player._pub());
+    //     }
+    // )
 };
 
 Game.loadImages(
