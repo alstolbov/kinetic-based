@@ -19,7 +19,7 @@ Game.createClass = function (className, classData) {
 
     this.classCollection[className] = function () {
         var classType;
-        var newClass;
+        var newClass = {};
         var classImg;
         var init = classData.init;
         var initData = {};
@@ -42,7 +42,7 @@ Game.createClass = function (className, classData) {
         switch (classType) {
 
             case 'image':
-                newClass = new Kinetic.Image(initData);
+                newClass.obj = new Kinetic.Image(initData);
                 if (initData.width && initData.height) {
                     newClass.crop({
                         x: 0,
@@ -54,11 +54,11 @@ Game.createClass = function (className, classData) {
                 break;
 
             case 'sprite':
-                newClass = new Kinetic.Sprite(initData);
+                newClass.obj = new Kinetic.Sprite(initData);
                 break;
 
             case 'simple':
-                newClass = new Kinetic.Rect(initData);
+                newClass.obj = new Kinetic.Rect(initData);
                 break;
         }
 
@@ -70,13 +70,16 @@ Game.createClass = function (className, classData) {
             switch (option) {
                 case "events":
                     for (var classEventKey in classData.events) {
-                        newClass.on(
+                        newClass.obj.on(
                             classEventKey,
                             function (e) {
                                 classData.events[classEventKey].call(newClass, e);
                             }
                         );
                     }
+                    break;
+
+                case "init":
                     break;
 
                 default:
@@ -93,8 +96,8 @@ Game.createObject = function (className, objectData) {
 
     var layer;
     var img;
-
-    var obj = this.classCollection[className]();
+    var obj = {};
+    obj = this.classCollection[className]();
 
     if (objectData) {
         if (objectData.layer) {
@@ -109,57 +112,28 @@ Game.createObject = function (className, objectData) {
             if (obj.willSetImage) {
                 img = this.getImage(obj.willSetImage);
                 if (img) {
-                    obj.setImage(img);
+                    obj.obj.setImage(img);
                 }
             }
 
             if (layer) {
-                layer.add(obj);
+                layer.add(obj.obj);
                 layer.draw();
             }
 
         }
         if (objectData.attrs) {
-            obj.setAttrs(objectData.attrs);
+            obj.obj.setAttrs(objectData.attrs);
         }
     }
 
     obj.set = function (attrs) {
-        obj.setAttrs(attrs);
+        obj.obj.setAttrs(attrs);
         if (layer) {
             layer.draw();
         }
 
         return obj;
-    };
-
-    obj.getPub = function (pubMethodName, args) {
-        var tmp = obj._pub();
-        var res;
-
-        if(!tmp[pubMethodName]) {
-            res = false;
-        } else {
-            switch (typeof tmp[pubMethodName]) {
-
-                case "function":
-                    res = tmp[pubMethodName].call(obj, args);
-                    break;
-                default:
-                    res = tmp[pubMethodName];
-
-            }
-        }
-
-        return res;
-    };
-
-    obj.setPub = function (pubMethodName, args) {
-        var tmp = obj._pub();
-        
-        if(tmp.hasOwnProperty(pubMethodName)) {
-            tmp[pubMethodName] = args;
-        }       
     };
 
     if (!this.objectCollection[className]) {
@@ -170,13 +144,13 @@ Game.createObject = function (className, objectData) {
 
     obj._className = className;
 
-    this.objectCollection[className][obj._id] = obj;
+    this.objectCollection[className][obj.obj._id] = obj;
 
     this.objectCollection[className]._length++;
 
     if (obj._onCreate) {
-        for (var i = 0; i <= obj._onCreate.length; i++) {
-            obj.getPub(obj._onCreate[i]);
+        for (var i = 0; i < obj._onCreate.length; i++) {
+            obj[obj._onCreate[i]]();
         }
     }
 
@@ -184,13 +158,13 @@ Game.createObject = function (className, objectData) {
 };
 
 Game.destroyObject = function (obj) {
-    if (this.objectCollection[obj._className] && this.objectCollection[obj._className][obj._id]) {
+    if (this.objectCollection[obj._className] && this.objectCollection[obj._className][obj.obj._id]) {
 
-        delete this.objectCollection[obj._className][obj._id];
+        delete this.objectCollection[obj._className][obj.obj._id];
 
         this.objectCollection[obj._className]._length--;
 
-        obj.destroy();
+        obj.obj.destroy();
 
         this.layers[obj._layerName].draw();
 
@@ -278,7 +252,7 @@ Game.addLayerAnimation = function (data, animateFunct) {
     }
 };
 
-Game.layerAnimation = function (layerName) {
+Game.getLayerAnimation = function (layerName) {
     if (this.layerAnimation[layerName]) {
         return this.layerAnimation[layerName].animateController;
     } else {
@@ -291,15 +265,15 @@ Game.isCollide = function (obj, className) {
         isHit: false,
         objects: []
     };
-    var objPos = obj.position();
+    var objPos = obj.obj.position();
     var itemPos;
     var item;
     var itemId;
     for(itemId in this.objectCollection[className]) {
         if (itemId !== '_length') {
             item = this.objectCollection[className][itemId];
-            itemPos = item.position();
-            if ((objPos.x - item.getWidth()) == itemPos.x) {
+            itemPos = item.obj.position();
+            if ((objPos.x - item.obj.getWidth()) == itemPos.x) {
                 res.isHit = true;
                 res.objects.push(this.objectCollection[className][itemId]);
             }

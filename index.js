@@ -40,35 +40,31 @@ Game.createClass('player', {
     },
     events: {
         click: function (e) {
-            console.log('player ID: ', this._id);
-            Game.layerAnimation(this._layerName).stop();
+            console.log('player ID: ', this.obj._id);
+            Game.getLayerAnimation(this._layerName).stop();
         }
     },
-    _pub: function () {
-        return {
-            addAnim: function () {
-                var _this = this;
-                Game.addLayerAnimation(
-                    {
-                        layerName: this._layerName,
-                        objId: this._id
-                    },
-                    function (frame) {
-                        if (_this._state.isMoved) {
-                            _this.set({x: _this.getAttr('x') - 1});
-                        }
-                        if (_this.getAttr('x') <= 10) {
-                            _this._state.isMoved = false;
-                        }
-                        var collide = Game.isCollide(_this, 'block');
-                        if (collide.isHit) {
-                            _this._state.isMoved = false;
-                        }
-                    }
-                );
-
+    addAnim: function () {
+        var _this = this;
+        Game.addLayerAnimation(
+            {
+                layerName: this._layerName,
+                objId: this.obj._id
+            },
+            function (frame) {
+                if (_this._state.isMoved) {
+                    _this.set({x: _this.obj.getAttr('x') - 1});
+                }
+                if (_this.obj.getAttr('x') <= 10) {
+                    _this._state.isMoved = false;
+                }
+                var collide = Game.isCollide(_this, 'block');
+                if (collide.isHit) {
+                    _this._state.isMoved = false;
+                }
             }
-        }
+        );
+
     },
     _onCreate: [
         'addAnim'
