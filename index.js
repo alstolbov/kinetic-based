@@ -29,21 +29,11 @@ Game.createClass('clickArea', {
         mousedown: function () {
             var _this = this;
             var mousePos = Game.Stage.getPointerPosition();
-            var activeBlockId = false;
-            for (var i in Game.objectCollection.block) {
-                var block = Game.objectCollection.block[i];
-                var blockParams = block.obj.position();
-                blockParams.w = block.obj.getWidth();
-                blockParams.h = block.obj.getHeight();
-                console.log(blockParams);
-                if( blockParams.x < mousePos.x && mousePos.x < (blockParams.x + blockParams.w) ) {
-                    if( blockParams.y < mousePos.y && mousePos.y < (blockParams.y + blockParams.h) ) {
-                        activeBlockId = block.obj._id;
-                    }
-                }
-            }
-            console.log(activeBlockId);
-            _this._state.activeBlockId = activeBlockId;
+            console.log('area:', mousePos);
+        },
+        mouseup: function () {
+            var mousePos = Game.Stage.getPointerPosition();
+            console.log('area:', mousePos);
         }
     },
     _state: {
@@ -57,7 +47,13 @@ Game.createClass('block', {
         y: 60,
         width: 50,
         height: 50,
-        _background: 'woodBox'
+        fill: 'gray'
+    },
+    events: {
+        mousedown: function () {
+            var mousePos = Game.Stage.getPointerPosition();
+            console.log('block:', mousePos);
+        }
     }
 });
 
