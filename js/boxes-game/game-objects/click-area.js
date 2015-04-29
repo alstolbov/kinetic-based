@@ -7,8 +7,13 @@ Game.createClass('clickArea', {
     },
     events: {
         mouseup: function () {
-            var mousePos = Game.Stage.getPointerPosition();
-            console.log('area:', mousePos);
+            if (!Store.mousePos.endPos.x) {
+                Store.mousePos.endPos = Game.Stage.getPointerPosition();
+                var box = Game.getById('box', Store.activeBlockId);
+                if (box) {
+                    box.boxMove();
+                }
+            }
         }
     }
 });

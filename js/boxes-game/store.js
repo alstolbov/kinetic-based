@@ -1,4 +1,5 @@
 var Store = {
+    isMoved: false,
     activeBlockId: false,
     mousePos: {
         startPos: {
@@ -9,5 +10,6 @@ var Store = {
             x: false,
             y: false
         }
-    }
+    },
+    animation: false
 };

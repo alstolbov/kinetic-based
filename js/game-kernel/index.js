@@ -4,6 +4,7 @@ TODO:
 - столкновения
 - управление с клавиатуры
 - гравитация?
+- статичные спрайты
 */
 
 var Game = {
@@ -227,32 +228,38 @@ Game.layer = function (layerName, options) {
     this.layers[layerName] = new Kinetic.Layer();
     this.Stage.add(this.layers[layerName]);
     if (options.animated) {
-        this.createAimationOnLayer(layerName);
+        this.createAnimationOnLayer(layerName);
     }
     return this.layers[layerName];
 
 };
 
-Game.createAimationOnLayer = function (layerName) {
+Game.createAnimationOnLayer = function (layerName) {
     var _this = this;
     if (_this.layers[layerName]) {
-        _this.layerAnimation[layerName] = {};
-        _this.layerAnimation[layerName].animateCollection = {};
-        _this.layerAnimation[layerName].animateController = new Kinetic.Animation(function(frame) {
-            for(var animItem in _this.layerAnimation[layerName].animateCollection) {
-                if (typeof _this.layerAnimation[layerName].animateCollection[animItem] == "function") {
-                    _this.layerAnimation[layerName].animateCollection[animItem](frame);
+        if (!_this.layerAnimation[layerName]){
+            _this.layerAnimation[layerName] = {};
+            _this.layerAnimation[layerName].animateCollection = {};
+            _this.layerAnimation[layerName].animateController = new Kinetic.Animation(function(frame) {
+                for(var animItem in _this.layerAnimation[layerName].animateCollection) {
+                    if (typeof _this.layerAnimation[layerName].animateCollection[animItem] == "function") {
+                        _this.layerAnimation[layerName].animateCollection[animItem](frame);
+                    }
                 }
-            }
-        }, _this.layers[layerName]);
+            }, _this.layers[layerName]);
 
-        _this.layerAnimation[layerName].animateController.start();
+            _this.layerAnimation[layerName].animateController.start();
+        }
+
+        return _this.layerAnimation[layerName].animateController;
+    } else {
+        return false;
     }
 };
 
 Game.addLayerAnimation = function (data, animateFunct) {
     if (!this.layerAnimation[data.layerName]) {
-        this.createAimationOnLayer(data.layerName);
+        this.createAnimationOnLayer(data.layerName);
     }
     if (this.layerAnimation[data.layerName] &&
     typeof animateFunct == "function") {
@@ -267,6 +274,15 @@ Game.getLayerAnimation = function (layerName) {
         return false;
     }
 };
+
+Game.getById = function (className, objId) {
+    if (this.objectCollection[className] &&
+    this.objectCollection[className][objId]) {
+        return this.objectCollection[className][objId];
+    } else {
+        return false;
+    }
+}
 
 Game.isCollide = function (obj, className) {
     var res = {
