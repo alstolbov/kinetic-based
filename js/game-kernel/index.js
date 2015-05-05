@@ -227,11 +227,20 @@ Game.layer = function (layerName, options) {
 
     this.layers[layerName] = new Kinetic.Layer();
     this.Stage.add(this.layers[layerName]);
-    if (options.animated) {
+    if (options && options.animated) {
         this.createAnimationOnLayer(layerName);
     }
-    return this.layers[layerName];
 
+    return this.layers[layerName];
+};
+
+Game.getLayerByName = function (layerName) {
+    var resLayer = false;
+    if (this.layers[layerName]) {
+        resLayer = this.layers[layerName];
+    }
+
+    return resLayer;
 };
 
 Game.createAnimationOnLayer = function (layerName) {
@@ -306,9 +315,9 @@ Game.isCollide = function (obj, className) {
 
 Game._collider = function (a, b) {
     return !(
-        ((a.getY() + a.getHeight()) < (b.getY())) ||
-        (a.getY() > (b.getY() + b.getHeight())) ||
-        ((a.getX() + a.getWidth()) < b.getX()) ||
-        (a.getX() > (b.getX() + b.getWidth()))
+        ((a.getY() + a.getHeight()) <= (b.getY())) ||
+        (a.getY() >= (b.getY() + b.getHeight())) ||
+        ((a.getX() + a.getWidth()) <= b.getX()) ||
+        (a.getX() >= (b.getX() + b.getWidth()))
     );
 }

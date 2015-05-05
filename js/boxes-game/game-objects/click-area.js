@@ -11,6 +11,7 @@ Game.createClass('clickArea', {
                 Store.mousePos.endPos = Game.Stage.getPointerPosition();
                 var box = Game.getById('box', Store.activeBlockId);
                 if (box) {
+                    Game.getLayerByName(this._layerName).hide();
                     box.boxMove();
                 }
             }

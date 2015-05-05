@@ -1,5 +1,5 @@
 var Store = {
-    isMoved: false,
+    moveVector: false,
     activeBlockId: false,
     mousePos: {
         startPos: {

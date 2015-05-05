@@ -1,7 +1,5 @@
 Game.createClass('box', {
     init: {
-        x: 150,
-        y: 60,
         width: 50,
         height: 50,
         _background: 'woodBox'
@@ -11,6 +9,7 @@ Game.createClass('box', {
             if (!Store.activeBlockId) {
                 Store.activeBlockId = this.obj._id;
                 Store.mousePos.startPos = Game.Stage.getPointerPosition();
+                Game.getLayerByName('clickLayer').show();
             }
         }
     },
@@ -22,7 +21,8 @@ Game.createClass('box', {
             Store.animation = Game.createAnimationOnLayer('mainLayer');
             Game.addLayerAnimation({layerName: 'mainLayer'}, function () {
                 if (Store.activeBlockId) {
-                    switch (getMoveVector()) {
+                    Store.moveVector = getMoveVector();
+                    switch (Store.moveVector) {
                         case "up":
                             _this.set({
                                 y: _this.obj.getY() - 1
@@ -44,11 +44,51 @@ Game.createClass('box', {
                             });
                             break;
                     }
+
                     var collide = Game.isCollide(_this, 'stone');
-                    console.log(collide);
                     if (collide.isHit) {
-                        resetActiveBlockFromStore();
-                        Store.animation.stop();
+                        var collider;
+                        var i;
+                        var colliderIndex = false;
+                        var isNeedStop = false;
+                        for(var i=0; i <collide.objects.length; i++) {
+                            collider = collide.objects[i];
+                            switch (Store.moveVector) {
+                                case "up":
+                                    if (collider.obj.getX() == _this.obj.getX() &&
+                                    (collider.obj.getY() + collider.obj.getHeight()) >= _this.obj.getY()) {
+                                        isNeedStop = true;
+                                        colliderIndex = i;
+                                    }
+                                    break;
+                                case "down":
+                                    if (collider.obj.getX() == _this.obj.getX() &&
+                                    collider.obj.getY() <= (_this.obj.getY() + _this.obj.getHeight())) {
+                                       isNeedStop = true;
+                                        colliderIndex = i;
+                                    }
+                                    break;
+                                case "left":
+                                    if (collider.obj.getY() == _this.obj.getY() &&
+                                    (collider.obj.getX() + collider.obj.getWidth()) >= _this.obj.getX()) {
+                                        isNeedStop = true;
+                                        colliderIndex = i;
+                                    }
+                                    break;
+                                case "right":
+                                    console.log(collider.obj.getX(), _this.obj.getX(), _this.obj.getWidth());
+                                    if (collider.obj.getY() == _this.obj.getY() &&
+                                    collider.obj.getX() <= (_this.obj.getX() + _this.obj.getWidth())) {
+                                        isNeedStop = true;
+                                        colliderIndex = i;
+                                    }
+                                    break;
+                            }
+                        }
+                        console.log(colliderIndex, collide.objects[colliderIndex]);
+                        if(isNeedStop) {
+                            collide.objects[colliderIndex].onHit();
+                        }
                     }
                 }
             });
