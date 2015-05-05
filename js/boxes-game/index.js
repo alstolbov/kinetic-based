@@ -1,3 +1,8 @@
+/*
+    -   ядро: анимация с установкой дискретности
+    -   
+*/
+
 var scriptRoot = 'js/boxes-game/';
 
 var Scripts = [

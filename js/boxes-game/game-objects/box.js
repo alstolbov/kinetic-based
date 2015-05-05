@@ -11,6 +11,13 @@ Game.createClass('box', {
                 Store.mousePos.startPos = Game.Stage.getPointerPosition();
                 Game.getLayerByName('clickLayer').show();
             }
+        },
+        mousedown: function () {
+            if (!Store.activeBlockId) {
+                Store.activeBlockId = this.obj._id;
+                Store.mousePos.startPos = Game.Stage.getPointerPosition();
+                Game.getLayerByName('clickLayer').show();
+            }
         }
     },
     boxMove: function () {

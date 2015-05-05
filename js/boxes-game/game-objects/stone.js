@@ -5,7 +5,6 @@ Game.createClass('stone', {
         fill: 'grau'
     },
     onHit: function () {
-        console.log(Store);
         resetActiveBlockFromStore();
         Store.animation.stop();
     }
