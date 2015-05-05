@@ -25,22 +25,22 @@ Game.createClass('box', {
                     switch (Store.moveVector) {
                         case "up":
                             _this.set({
-                                y: _this.obj.getY() - 1
+                                y: _this.obj.getY() - Settings.speed
                             });
                             break;
                         case "down":
                             _this.set({
-                                y: _this.obj.getY() + 1
+                                y: _this.obj.getY() + Settings.speed
                             });
                             break;
                         case "left":
                             _this.set({
-                                x: _this.obj.getX() - 1
+                                x: _this.obj.getX() - Settings.speed
                             });
                             break;
                         case "right":
                             _this.set({
-                                x: _this.obj.getX() + 1
+                                x: _this.obj.getX() + Settings.speed
                             });
                             break;
                     }
@@ -59,6 +59,9 @@ Game.createClass('box', {
                                     (collider.obj.getY() + collider.obj.getHeight()) >= _this.obj.getY()) {
                                         isNeedStop = true;
                                         colliderIndex = i;
+                                        _this.set({
+                                            y: collider.obj.getY() + collider.obj.getHeight()
+                                        });
                                     }
                                     break;
                                 case "down":
@@ -66,6 +69,9 @@ Game.createClass('box', {
                                     collider.obj.getY() <= (_this.obj.getY() + _this.obj.getHeight())) {
                                        isNeedStop = true;
                                         colliderIndex = i;
+                                        _this.set({
+                                            y: collider.obj.getY() - _this.obj.getHeight()
+                                        });
                                     }
                                     break;
                                 case "left":
@@ -73,19 +79,23 @@ Game.createClass('box', {
                                     (collider.obj.getX() + collider.obj.getWidth()) >= _this.obj.getX()) {
                                         isNeedStop = true;
                                         colliderIndex = i;
+                                        _this.set({
+                                            x: collider.obj.getX() + collider.obj.getWidth()
+                                        });
                                     }
                                     break;
                                 case "right":
-                                    console.log(collider.obj.getX(), _this.obj.getX(), _this.obj.getWidth());
                                     if (collider.obj.getY() == _this.obj.getY() &&
                                     collider.obj.getX() <= (_this.obj.getX() + _this.obj.getWidth())) {
                                         isNeedStop = true;
                                         colliderIndex = i;
+                                        _this.set({
+                                            x: collider.obj.getX() - _this.obj.getWidth()
+                                        });
                                     }
                                     break;
                             }
                         }
-                        console.log(colliderIndex, collide.objects[colliderIndex]);
                         if(isNeedStop) {
                             collide.objects[colliderIndex].onHit();
                         }
