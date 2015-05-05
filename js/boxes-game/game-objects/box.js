@@ -5,7 +5,7 @@ Game.createClass('box', {
         _background: 'woodBox'
     },
     events: {
-        mousedown: function () {
+        touchstart: function () {
             if (!Store.activeBlockId) {
                 Store.activeBlockId = this.obj._id;
                 Store.mousePos.startPos = Game.Stage.getPointerPosition();

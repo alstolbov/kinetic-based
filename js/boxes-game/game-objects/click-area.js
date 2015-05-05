@@ -6,7 +6,7 @@ Game.createClass('clickArea', {
         y: 0      
     },
     events: {
-        mouseup: function () {
+        touchend: function () {
             if (!Store.mousePos.endPos.x) {
                 Store.mousePos.endPos = Game.Stage.getPointerPosition();
                 var box = Game.getById('box', Store.activeBlockId);
