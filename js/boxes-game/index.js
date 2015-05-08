@@ -10,6 +10,8 @@ var Scripts = [
     'js/game-kernel/index',
     scriptRoot + 'config',
     scriptRoot + 'store',
+    scriptRoot + 'levels',
+    scriptRoot + 'on-load-end',
     scriptRoot + 'public-functions',
     scriptRoot + 'game-objects/click-area',
     scriptRoot + 'game-objects/box',

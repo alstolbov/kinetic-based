@@ -1,6 +1,8 @@
 var Settings = {
     canvasWidth: 600,
     canvasHeight: 400,
+    itemWidth: 50,
+    itemHeight: 50,
     speed: 2
 };
 var images = [
