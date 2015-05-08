@@ -15,7 +15,7 @@ var Scripts = [
     scriptRoot + 'public-functions',
     scriptRoot + 'game-objects/click-area',
     scriptRoot + 'game-objects/box',
-    scriptRoot + 'game-objects/stone'
+    scriptRoot + 'game-objects/wall'
 
 ];
 

@@ -3,7 +3,8 @@ var Settings = {
     canvasHeight: 400,
     itemWidth: 50,
     itemHeight: 50,
-    speed: 2
+    speed: 2,
+    startLevel: 1
 };
 var images = [
     {
