@@ -66,9 +66,9 @@ Game.createClass('box', {
                                     (collider.obj.getY() + collider.obj.getHeight()) >= _this.obj.getY()) {
                                         isNeedStop = true;
                                         colliderIndex = i;
-                                        _this.set({
-                                            y: collider.obj.getY() + collider.obj.getHeight()
-                                        });
+                                        // _this.set({
+                                        //     y: collider.obj.getY() + collider.obj.getHeight()
+                                        // });
                                     }
                                     break;
                                 case "down":
@@ -76,9 +76,9 @@ Game.createClass('box', {
                                     collider.obj.getY() <= (_this.obj.getY() + _this.obj.getHeight())) {
                                        isNeedStop = true;
                                         colliderIndex = i;
-                                        _this.set({
-                                            y: collider.obj.getY() - _this.obj.getHeight()
-                                        });
+                                        // _this.set({
+                                        //     y: collider.obj.getY() - _this.obj.getHeight()
+                                        // });
                                     }
                                     break;
                                 case "left":
@@ -86,9 +86,9 @@ Game.createClass('box', {
                                     (collider.obj.getX() + collider.obj.getWidth()) >= _this.obj.getX()) {
                                         isNeedStop = true;
                                         colliderIndex = i;
-                                        _this.set({
-                                            x: collider.obj.getX() + collider.obj.getWidth()
-                                        });
+                                        // _this.set({
+                                        //     x: collider.obj.getX() + collider.obj.getWidth()
+                                        // });
                                     }
                                     break;
                                 case "right":
@@ -96,15 +96,15 @@ Game.createClass('box', {
                                     collider.obj.getX() <= (_this.obj.getX() + _this.obj.getWidth())) {
                                         isNeedStop = true;
                                         colliderIndex = i;
-                                        _this.set({
-                                            x: collider.obj.getX() - _this.obj.getWidth()
-                                        });
+                                        // _this.set({
+                                        //     x: collider.obj.getX() - _this.obj.getWidth()
+                                        // });
                                     }
                                     break;
                             }
                         }
                         if(isNeedStop) {
-                            collide.objects[colliderIndex].onHit();
+                            collide.objects[colliderIndex].onHit(_this);
                         }
                     }
                 }
