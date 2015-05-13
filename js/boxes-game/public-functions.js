@@ -44,4 +44,29 @@ var resetActiveBlockFromStore = function () {
             y: false
         }
     };
-}
+};
+
+var boxOnHitWall = function (box, wall) {
+    switch (Store.moveVector) {
+        case "up":
+            box.set({
+                y: wall.obj.getY() + wall.obj.getHeight()
+            })
+            break;
+        case "down":
+            box.set({
+                y: wall.obj.getY() - box.obj.getHeight()
+            });
+            break;
+        case "left":
+            box.set({
+                 x: wall.obj.getX() + wall.obj.getWidth()
+            });
+            break;
+        case "right":
+            box.set({
+                x: wall.obj.getX() - box.obj.getWidth()
+            });
+            break;
+    }
+};

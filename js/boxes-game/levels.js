@@ -10,7 +10,7 @@ var Levels = {
         name: 'Begin',
         width: 6,
         height: 6,
-        data: [
+        map: [
             [ 0 ],
             [ 0 ],
             [ 0, 2, 0, 0, 0, 3 ],
@@ -18,4 +18,5 @@ var Levels = {
             [ 0 ],
             [ 1 ]
         ]
+    }
 };

@@ -27,32 +27,32 @@ Game.createClass('box', {
         } else {
             Store.animation = Game.createAnimationOnLayer('mainLayer');
             Game.addLayerAnimation({layerName: 'mainLayer'}, function () {
+                var box = Game.getById('box', Store.activeBlockId);
                 if (Store.activeBlockId) {
-                    Store.moveVector = getMoveVector();
                     switch (Store.moveVector) {
                         case "up":
-                            _this.set({
-                                y: _this.obj.getY() - Settings.speed
+                            box.set({
+                                y: box.obj.getY() - Settings.speed
                             });
                             break;
                         case "down":
-                            _this.set({
-                                y: _this.obj.getY() + Settings.speed
+                            box.set({
+                                y: box.obj.getY() + Settings.speed
                             });
                             break;
                         case "left":
-                            _this.set({
-                                x: _this.obj.getX() - Settings.speed
+                            box.set({
+                                x: box.obj.getX() - Settings.speed
                             });
                             break;
                         case "right":
-                            _this.set({
-                                x: _this.obj.getX() + Settings.speed
+                            box.set({
+                                x: box.obj.getX() + Settings.speed
                             });
                             break;
                     }
 
-                    var collide = Game.isCollide(_this, 'stone');
+                    var collide = Game.isCollide(box, ['box', 'wall']);
                     if (collide.isHit) {
                         var collider;
                         var i;
@@ -62,8 +62,8 @@ Game.createClass('box', {
                             collider = collide.objects[i];
                             switch (Store.moveVector) {
                                 case "up":
-                                    if (collider.obj.getX() == _this.obj.getX() &&
-                                    (collider.obj.getY() + collider.obj.getHeight()) >= _this.obj.getY()) {
+                                    if (collider.obj.getX() == box.obj.getX() &&
+                                    (collider.obj.getY() + collider.obj.getHeight()) >= box.obj.getY()) {
                                         isNeedStop = true;
                                         colliderIndex = i;
                                         // _this.set({
@@ -72,8 +72,8 @@ Game.createClass('box', {
                                     }
                                     break;
                                 case "down":
-                                    if (collider.obj.getX() == _this.obj.getX() &&
-                                    collider.obj.getY() <= (_this.obj.getY() + _this.obj.getHeight())) {
+                                    if (collider.obj.getX() == box.obj.getX() &&
+                                    collider.obj.getY() <= (box.obj.getY() + box.obj.getHeight())) {
                                        isNeedStop = true;
                                         colliderIndex = i;
                                         // _this.set({
@@ -82,8 +82,8 @@ Game.createClass('box', {
                                     }
                                     break;
                                 case "left":
-                                    if (collider.obj.getY() == _this.obj.getY() &&
-                                    (collider.obj.getX() + collider.obj.getWidth()) >= _this.obj.getX()) {
+                                    if (collider.obj.getY() == box.obj.getY() &&
+                                    (collider.obj.getX() + collider.obj.getWidth()) >= box.obj.getX()) {
                                         isNeedStop = true;
                                         colliderIndex = i;
                                         // _this.set({
@@ -92,8 +92,8 @@ Game.createClass('box', {
                                     }
                                     break;
                                 case "right":
-                                    if (collider.obj.getY() == _this.obj.getY() &&
-                                    collider.obj.getX() <= (_this.obj.getX() + _this.obj.getWidth())) {
+                                    if (collider.obj.getY() == box.obj.getY() &&
+                                    collider.obj.getX() <= (box.obj.getX() + box.obj.getWidth())) {
                                         isNeedStop = true;
                                         colliderIndex = i;
                                         // _this.set({
@@ -103,12 +103,18 @@ Game.createClass('box', {
                                     break;
                             }
                         }
-                        if(isNeedStop) {
-                            collide.objects[colliderIndex].onHit(_this);
+                        if(isNeedStop && collide.objects[colliderIndex].onHit) {
+                            collide.objects[colliderIndex].onHit(box);
                         }
                     }
                 }
             });
         }
+    },
+    onHit: function (box) {
+        boxOnHitWall(box, this);
+        resetActiveBlockFromStore();
+        Store.animation.stop();
     }
+
 });

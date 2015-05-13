@@ -98,7 +98,11 @@ Game.createObject = function (className, objectData) {
     var layer;
     var img;
     var obj = {};
-    obj = this.classCollection[className]();
+    if (this.classCollection[className]) {
+        obj = this.classCollection[className]();
+    } else {
+        console.error('class "' + className + '" is empty.');
+    }
 
     if (objectData) {
         if (objectData.layer) {
@@ -298,14 +302,24 @@ Game.isCollide = function (obj, className) {
         isHit: false,
         objects: []
     };
+    var req = false;
+    if (typeof className == "string") {
+        req = [className];
+    } else if (typeof className == "object") {
+        req = className;
+    }
     var item;
     var itemId;
-    for(itemId in this.objectCollection[className]) {
-        if (itemId !== '_length') {
-            item = this.objectCollection[className][itemId];
-            if (this._collider(obj.obj, item.obj)) {
-                res.isHit = true;
-                res.objects.push(this.objectCollection[className][itemId]);
+    if (req) {
+        for(var i = 0; i < req.length; i++) {
+            for(itemId in this.objectCollection[req[i]]) {
+                if (parseInt(itemId, 10) !== obj.obj._id) {
+                    item = this.objectCollection[req[i]][itemId];
+                    if (this._collider(obj.obj, item.obj)) {
+                        res.isHit = true;
+                        res.objects.push(this.objectCollection[req[i]][itemId]);
+                    }
+                }
             }
         }
     }
